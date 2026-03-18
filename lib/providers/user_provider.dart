@@ -1,7 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/user_model.dart';
 import '../repositories/user_repository.dart';
 import 'auth_provider.dart';
+
+final userRepositoryProvider = Provider((ref) {
+  return UserRepository(
+    firestore: FirebaseFirestore.instance,
+  );
+});
 
 final searchQueryProvider = StateProvider<String>((ref) => '');
 

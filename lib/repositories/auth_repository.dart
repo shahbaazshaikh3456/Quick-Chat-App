@@ -5,10 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/user_model.dart';
 
 final authRepositoryProvider = Provider((ref) => AuthRepository(
-      auth: FirebaseAuth.instance,
-      firestore: FirebaseFirestore.instance,
-      googleSignIn: GoogleSignIn(),
-    ));
+  auth: FirebaseAuth.instance,
+  firestore: FirebaseFirestore.instance,
+  googleSignIn: GoogleSignIn(),
+));
 
 class AuthRepository {
   final FirebaseAuth auth;
@@ -21,8 +21,10 @@ class AuthRepository {
     required this.googleSignIn,
   });
 
+  /// AUTH STATE LISTENER
   Stream<User?> get authStateChange => auth.authStateChanges();
 
+  /// GET USER DATA FROM FIRESTORE
   Future<UserModel?> getUserData(String uid) async {
     final doc = await firestore.collection('users').doc(uid).get();
     if (doc.exists && doc.data() != null) {
@@ -31,68 +33,92 @@ class AuthRepository {
     return null;
   }
 
+  /// EMAIL LOGIN
   Future<UserCredential> signInWithEmail(String email, String password) async {
-    return await auth.signInWithEmailAndPassword(email: email, password: password);
-  }
+    UserCredential creds = await auth.signInWithEmailAndPassword(
+        email: email, password: password);
 
-  Future<UserCredential> registerWithEmail(String email, String password, String name) async {
-    UserCredential creds = await auth.createUserWithEmailAndPassword(email: email, password: password);
     if (creds.user != null) {
-      UserModel userModel = UserModel(
-        uid: creds.user!.uid,
-        name: name,
-        email: email,
-        profilePhoto: 'https://i.pravatar.cc/150?u=${creds.user!.uid}',
-        isOnline: true,
-        lastSeen: DateTime.now().millisecondsSinceEpoch,
-      );
-      await firestore.collection('users').doc(creds.user!.uid).set(userModel.toMap());
+      await _saveUserToFirestore(creds.user!, name: email.split('@')[0]);
     }
+
     return creds;
   }
 
-  Future<UserCredential?> signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-    if (googleUser != null) {
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-      UserCredential creds = await auth.signInWithCredential(credential);
-      
-      if (creds.user != null && creds.additionalUserInfo?.isNewUser == true) {
-        UserModel userModel = UserModel(
-          uid: creds.user!.uid,
-          name: googleUser.displayName ?? 'User',
-          email: googleUser.email,
-          profilePhoto: googleUser.photoUrl ?? 'https://i.pravatar.cc/150?u=${creds.user!.uid}',
-          isOnline: true,
-          lastSeen: DateTime.now().millisecondsSinceEpoch,
-        );
-        await firestore.collection('users').doc(creds.user!.uid).set(userModel.toMap());
-      }
-      return creds;
+  /// EMAIL REGISTER
+  Future<UserCredential> registerWithEmail(
+      String email, String password, String name) async {
+    UserCredential creds =
+    await auth.createUserWithEmailAndPassword(email: email, password: password);
+
+    if (creds.user != null) {
+      await _saveUserToFirestore(creds.user!, name: name);
     }
-    return null;
+
+    return creds;
   }
 
+  /// GOOGLE LOGIN
+  Future<UserCredential?> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+    if (googleUser == null) return null;
+
+    final GoogleSignInAuthentication googleAuth =
+    await googleUser.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    UserCredential creds = await auth.signInWithCredential(credential);
+
+    if (creds.user != null) {
+      await _saveUserToFirestore(
+        creds.user!,
+        name: googleUser.displayName ?? "User",
+        email: googleUser.email,
+        photo: googleUser.photoUrl,
+      );
+    }
+
+    return creds;
+  }
+
+  /// SAVE USER TO FIRESTORE
+  Future<void> _saveUserToFirestore(User user,
+      {String? name, String? email, String? photo}) async {
+    await firestore.collection('users').doc(user.uid).set({
+      'uid': user.uid,
+      'name': name ?? 'User',
+      'email': email ?? user.email,
+      'profilePhoto': photo ?? 'https://i.pravatar.cc/150?u=${user.uid}',
+      'isOnline': true,
+      'lastSeen': DateTime.now().millisecondsSinceEpoch,
+    }, SetOptions(merge: true));
+  }
+
+  /// SIGN OUT
   Future<void> signOut() async {
     if (auth.currentUser != null) {
       await updateOnlineStatus(auth.currentUser!.uid, false);
     }
+
     await googleSignIn.signOut();
     await auth.signOut();
   }
 
+  /// PASSWORD RESET
   Future<void> sendPasswordResetEmail(String email) async {
     await auth.sendPasswordResetEmail(email: email);
   }
 
+  /// UPDATE ONLINE STATUS
   Future<void> updateOnlineStatus(String uid, bool isOnline) async {
-    await firestore.collection('users').doc(uid).update({
+    await firestore.collection('users').doc(uid).set({
       'isOnline': isOnline,
       'lastSeen': DateTime.now().millisecondsSinceEpoch,
-    });
+    }, SetOptions(merge: true));
   }
 }

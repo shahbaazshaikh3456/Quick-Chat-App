@@ -1,10 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/user_model.dart';
 
-final userRepositoryProvider = Provider((ref) => UserRepository(
-      firestore: FirebaseFirestore.instance,
-    ));
 
 class UserRepository {
   final FirebaseFirestore firestore;
@@ -21,5 +17,17 @@ class UserRepository {
     return firestore.collection('users').doc(uid).snapshots().map((doc) {
       return UserModel.fromMap(doc.data()!, doc.id);
     });
+  }
+  Future<void> updateUserProfile(UserModel user) async {
+    await firestore.collection('users').doc(user.uid).set(
+          user.toMap(),
+          SetOptions(merge: true),
+        );
+  }
+
+  Future<void> updateProfileImage(String uid, String imageUrl) async {
+    await firestore.collection('users').doc(uid).set({
+      'profilePhoto': imageUrl,
+    }, SetOptions(merge: true));
   }
 }

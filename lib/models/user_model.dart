@@ -5,6 +5,7 @@ class UserModel {
   final String profilePhoto;
   final bool isOnline;
   final int lastSeen;
+  final String bio;
 
   UserModel({
     required this.uid,
@@ -13,6 +14,7 @@ class UserModel {
     required this.profilePhoto,
     required this.isOnline,
     required this.lastSeen,
+    required this.bio,
   });
 
   Map<String, dynamic> toMap() {
@@ -23,6 +25,7 @@ class UserModel {
       'profilePhoto': profilePhoto,
       'isOnline': isOnline,
       'lastSeen': lastSeen,
+      'bio': bio,
     };
   }
 
@@ -34,6 +37,25 @@ class UserModel {
       profilePhoto: map['profilePhoto'] ?? '',
       isOnline: map['isOnline'] ?? false,
       lastSeen: map['lastSeen'] ?? DateTime.now().millisecondsSinceEpoch,
+      bio: map['bio'] ?? '',
+    );
+  }
+
+  UserModel copyWith({
+    String? name,
+    String? profilePhoto,
+    String? bio,
+    bool? isOnline,
+    int? lastSeen,
+  }) {
+    return UserModel(
+      uid: uid,
+      name: name ?? this.name,
+      email: email,
+      profilePhoto: profilePhoto ?? this.profilePhoto,
+      isOnline: isOnline ?? this.isOnline,
+      lastSeen: lastSeen ?? this.lastSeen,
+      bio: bio ?? this.bio,
     );
   }
 }

@@ -7,12 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:487588094644:android:b4a4c50421c84d939fade1",
+        "mobilesdk_app_id": "1:487588094644:android:ab30b2446b7187bc9fade1",
         "android_client_info": {
-          "package_name": "com.example.quick_chat"
+          "package_name": "com.quickchat.quick_chat"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "487588094644-p2m9t6f28unrq0mgq07ivd03mumvf5vq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDqQtd6MVA8SpXsuv1aTaHW_xnfwj_A8rw"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "487588094644-p2m9t6f28unrq0mgq07ivd03mumvf5vq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

@@ -1,0 +1,43 @@
+Starting a Gradle Daemon, 7 busy and 3 incompatible and 1 stopped Daemons could not be reused, use --status for details
+
+FAILURE: Build failed with an exception.
+
+* Where:
+Settings file 'C:\Users\Admin\Desktop\Quick Chat\android\settings.gradle.kts' line: 20
+
+* What went wrong:
+Error resolving plugin [id: 'dev.flutter.flutter-plugin-loader', version: '1.0.0']
+> A problem occurred configuring project ':gradle'.
+   > Multiple build operations failed.
+         Could not read workspace metadata from C:\Users\Admin\.gradle\caches\8.14\transforms\1a2e779d82ee6cf1a37c485593df8340\metadata.bin
+         Could not read workspace metadata from C:\Users\Admin\.gradle\caches\8.14\transforms\5e16b903b7e71286fff5ef469aa5dd64\metadata.bin
+         Could not read workspace metadata from C:\Users\Admin\.gradle\caches\8.14\transforms\e370f1309bb427621c9dd7ae376db37f\metadata.bin
+         Could not read workspace metadata from C:\Users\Admin\.gradle\caches\8.14\transforms\cddd7300bb9fb6a257b2a8c4010f0450\metadata.bin
+         Could not read workspace metadata from C:\Users\Admin\.gradle\caches\8.14\transforms\5862c24fe8d62ad60b1299d0d20cd0f2\metadata.bin
+         Could not read workspace metadata from C:\Users\Admin\.gradle\caches\8.14\transforms\3ff21b24bf0cfec0e493649fe83a5f72\metadata.bin
+         Could not read workspace metadata from C:\Users\Admin\.gradle\caches\8.14\transforms\b57d74f119dd44536bbe7af59900f6a5\metadata.bin
+         Could not read workspace metadata from C:\Users\Admin\.gradle\caches\8.14\transforms\7f7d48f57bb581c9f98ae0b4fe0933e8\metadata.bin
+         Could not read workspace metadata from C:\Users\Admin\.gradle\caches\8.14\transforms\1ea24d9a6a4ebe6f9d029aa91bda221f\metadata.bin
+         Could not read workspace metadata from C:\Users\Admin\.gradle\caches\8.14\transforms\8b7a8db04f880977c033a49d68f5c7b3\metadata.bin
+         ...and 3 more failures.
+      > Could not read workspace metadata from C:\Users\Admin\.gradle\caches\8.14\transforms\1a2e779d82ee6cf1a37c485593df8340\metadata.bin
+      > Could not read workspace metadata from C:\Users\Admin\.gradle\caches\8.14\transforms\5e16b903b7e71286fff5ef469aa5dd64\metadata.bin
+      > Could not read workspace metadata from C:\Users\Admin\.gradle\caches\8.14\transforms\e370f1309bb427621c9dd7ae376db37f\metadata.bin
+      > Could not read workspace metadata from C:\Users\Admin\.gradle\caches\8.14\transforms\cddd7300bb9fb6a257b2a8c4010f0450\metadata.bin
+      > Could not read workspace metadata from C:\Users\Admin\.gradle\caches\8.14\transforms\5862c24fe8d62ad60b1299d0d20cd0f2\metadata.bin
+      > Could not read workspace metadata from C:\Users\Admin\.gradle\caches\8.14\transforms\3ff21b24bf0cfec0e493649fe83a5f72\metadata.bin
+      > Could not read workspace metadata from C:\Users\Admin\.gradle\caches\8.14\transforms\b57d74f119dd44536bbe7af59900f6a5\metadata.bin
+      > Could not read workspace metadata from C:\Users\Admin\.gradle\caches\8.14\transforms\7f7d48f57bb581c9f98ae0b4fe0933e8\metadata.bin
+      > Could not read workspace metadata from C:\Users\Admin\.gradle\caches\8.14\transforms\1ea24d9a6a4ebe6f9d029aa91bda221f\metadata.bin
+      > Could not read workspace metadata from C:\Users\Admin\.gradle\caches\8.14\transforms\8b7a8db04f880977c033a49d68f5c7b3\metadata.bin
+      > Could not read workspace metadata from C:\Users\Admin\.gradle\caches\8.14\transforms\0dea8e91a2e36b4821b140e98a3c6ad4\metadata.bin
+      > Could not read workspace metadata from C:\Users\Admin\.gradle\caches\8.14\transforms\34e9e240dc85f40ff3529429a7b2b86d\metadata.bin
+      > Could not read workspace metadata from C:\Users\Admin\.gradle\caches\8.14\transforms\0b6f6b7d0f2a1f4c9c7c5ec70c8cf723\metadata.bin
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 17s

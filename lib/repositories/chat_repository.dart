@@ -1,10 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/message_model.dart';
-
-final chatRepositoryProvider = Provider((ref) => ChatRepository(
-      firestore: FirebaseFirestore.instance,
-    ));
 
 class ChatRepository {
   final FirebaseFirestore firestore;
@@ -30,15 +25,29 @@ class ChatRepository {
     });
   }
 
-  Future<void> sendMessage(String currentUserId, String receiverId, String text) async {
+  Future<void> sendMessage({
+    required String currentUserId,
+    required String receiverId,
+    required String text,
+    String type = 'text',
+    String? imageUrl,
+    String? videoUrl,
+    String? fileUrl,
+    String? fileName,
+  }) async {
     String chatId = getChatId(currentUserId, receiverId);
-    
+
     MessageModel message = MessageModel(
       senderId: currentUserId,
       receiverId: receiverId,
       message: text,
       timestamp: DateTime.now().millisecondsSinceEpoch,
       status: 'sent',
+      type: type,
+      imageUrl: imageUrl,
+      videoUrl: videoUrl,
+      fileUrl: fileUrl,
+      fileName: fileName,
     );
 
     await firestore
@@ -46,9 +55,9 @@ class ChatRepository {
         .doc(chatId)
         .collection('messages')
         .add(message.toMap());
-        
+
     await firestore.collection('chats').doc(chatId).set({
-      'lastMessage': text,
+      'lastMessage': type == 'text' ? text : 'Shared a $type',
       'timestamp': message.timestamp,
       'participants': [currentUserId, receiverId],
     }, SetOptions(merge: true));
@@ -61,7 +70,7 @@ class ChatRepository {
         .doc(chatId)
         .collection('messages')
         .where('receiverId', isEqualTo: currentUserId)
-        .where('status', isNotEqualTo: 'seen')
+        .where('status', isEqualTo: 'sent')
         .get();
 
     WriteBatch batch = firestore.batch();
@@ -69,5 +78,20 @@ class ChatRepository {
       batch.update(doc.reference, {'status': 'seen'});
     }
     await batch.commit();
+  }
+
+  Stream<List<Map<String, dynamic>>> getRecentChats(String currentUserId) {
+    return firestore
+        .collection('chats')
+        .where('participants', arrayContains: currentUserId)
+        .orderBy('timestamp', descending: true)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        data['chatId'] = doc.id;
+        return data;
+      }).toList();
+    });
   }
 }
