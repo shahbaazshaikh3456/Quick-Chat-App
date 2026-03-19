@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/message_model.dart';
 import '../repositories/chat_repository.dart';
 import '../services/cloudinary_service.dart';
+import '../services/notification_service.dart';
 import 'auth_provider.dart';
 
 final cloudinaryServiceProvider = Provider((_) => CloudinaryService());
@@ -16,6 +17,7 @@ final chatControllerProvider = Provider((ref) {
   return ChatController(
     chatRepository: ref.watch(chatRepositoryProvider),
     cloudinary: ref.watch(cloudinaryServiceProvider),
+    notificationService: ref.watch(notificationServiceProvider),
     ref: ref,
   );
 });
@@ -28,14 +30,17 @@ final messagesStreamProvider = StreamProvider.family<List<MessageModel>, String>
 class ChatController {
   final ChatRepository _chatRepository;
   final CloudinaryService _cloudinary;
+  final NotificationService _notificationService;
   final Ref _ref;
 
   ChatController({
     required ChatRepository chatRepository,
     required CloudinaryService cloudinary,
+    required NotificationService notificationService,
     required Ref ref,
   })  : _chatRepository = chatRepository,
         _cloudinary = cloudinary,
+        _notificationService = notificationService,
         _ref = ref;
 
   Stream<List<MessageModel>> getMessages(String receiverId) {
@@ -50,7 +55,8 @@ class ChatController {
     String type = 'text',
     File? file,
   }) async {
-    final currentUserId = _ref.read(authStateProvider).value?.uid;
+    final currentUser = _ref.read(authStateProvider).value;
+    final currentUserId = currentUser?.uid;
     if (currentUserId == null) return;
 
     String? imageUrl;
@@ -79,6 +85,27 @@ class ChatController {
       fileUrl: fileUrl,
       fileName: fileName,
     );
+
+    // ── Push notification to receiver ──────────────────────────────────────
+    final senderName = await _getSenderName(currentUserId);
+    final preview = type == 'text' ? text : '📎 Shared a $type';
+
+    await _notificationService.sendPushNotification(
+      receiverUserId: receiverId,
+      senderName: senderName,
+      messagePreview: preview,
+      senderUserId: currentUserId,
+    );
+  }
+
+  /// Fetches the sender's display name from Firestore.
+  Future<String> _getSenderName(String uid) async {
+    try {
+      final doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      return (doc.data()?['name'] as String?) ?? 'Someone';
+    } catch (_) {
+      return 'Someone';
+    }
   }
 
   Future<void> markMessagesAsSeen(String receiverId) async {

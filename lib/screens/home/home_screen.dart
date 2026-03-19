@@ -6,7 +6,6 @@ import '../../providers/chat_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../models/user_model.dart';
-import '../../services/notification_service.dart';
 import '../chat/chat_screen.dart';
 import '../profile/profile_screen.dart';
 import '../post/post_screen.dart';
@@ -25,9 +24,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(notificationServiceProvider).requestPermission();
-    });
+    // Notification initialization is handled in main.dart
   }
 
   @override
