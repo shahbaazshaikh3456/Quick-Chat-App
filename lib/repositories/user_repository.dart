@@ -1,3 +1,5 @@
+/// Repository for managing user profiles and broad user listings.
+/// Provides streams for real-time user data and handles profile updates.
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
 

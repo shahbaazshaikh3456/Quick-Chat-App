@@ -1,3 +1,5 @@
+/// Represents a single message in a chat conversation.
+/// Contains metadata about the sender, receiver, timestamp, and message type.
 class MessageModel {
   final String senderId;
   final String receiverId;

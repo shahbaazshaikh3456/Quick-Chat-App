@@ -1,3 +1,5 @@
+/// Represents a user within the Quick Chat application.
+/// Stores essential profile information and real-time status.
 class UserModel {
   final String uid;
   final String name;

@@ -1,3 +1,5 @@
+/// Chat Logic and Messaging Providers.
+/// Connects the UI to ChatRepository and handles media uploads and push notifications.
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

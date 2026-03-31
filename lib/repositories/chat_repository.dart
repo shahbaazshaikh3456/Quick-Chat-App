@@ -1,3 +1,5 @@
+/// Repository for managing real-time chat messages and conversation history.
+/// Handles Firestore operations for sending and receiving messages.
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/message_model.dart';
 

@@ -1,3 +1,5 @@
+/// User Listing and Search Providers.
+/// Streams the list of all users and applies filters for local search.
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/user_model.dart';

@@ -1,3 +1,5 @@
+/// Authentication Providers and Controllers.
+/// Manages user login, registration, and session state using Riverpod and Firebase Auth.
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../repositories/auth_repository.dart';
